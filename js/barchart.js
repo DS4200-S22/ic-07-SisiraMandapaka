@@ -16,7 +16,7 @@ const margin = {left:50, right:50, bottom:50, top:50};
 const yTooltipOffset = 15; 
 
 
-// TODO: What does this code do? 
+// Creates the shapes involved in the bar chart, with the bars and the box surrounding it
 const svg1 = d3
   .select("#hard-coded-bar")
   .append("svg")
@@ -41,18 +41,21 @@ const data1 = [
 
 */ 
 
-// TODO: What does this code do? 
+// Takes the maximum score of each category on the x axis
 let maxY1 = d3.max(data1, function(d) { return d.score; });
 
 // TODO: What does each line of this code do?   
 let yScale1 = d3.scaleLinear()
+            //sets the domain of values on the y-axis
             .domain([0,maxY1])
+            //sets the range of values on the y-axis
             .range([height-margin.bottom,margin.top]); 
 
 // TODO: What does each line of this code do? 
 let xScale1 = d3.scaleBand()
             .domain(d3.range(data1.length))
             .range([margin.left, width - margin.right])
+            //adds padding to the y-axis
             .padding(0.1); 
 
 // TODO: What does each line of this code do?  
