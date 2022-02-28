@@ -44,30 +44,35 @@ const data1 = [
 // Takes the maximum score of each category on the x axis
 let maxY1 = d3.max(data1, function(d) { return d.score; });
 
-// TODO: What does each line of this code do?   
+// Sets a linear scale for the y-axis
 let yScale1 = d3.scaleLinear()
             //sets the domain of values on the y-axis
             .domain([0,maxY1])
             //sets the range of values on the y-axis
             .range([height-margin.bottom,margin.top]); 
 
-// TODO: What does each line of this code do? 
+// Sets a banded scale for the x-axi
 let xScale1 = d3.scaleBand()
             .domain(d3.range(data1.length))
             .range([margin.left, width - margin.right])
-            //adds padding to the y-axis
+            //adds padding to the x-axis
             .padding(0.1); 
 
-// TODO: What does each line of this code do?  
+//appends a placeholder svg/general svg class
 svg1.append("g")
+    //places the svg on the y-axis
    .attr("transform", `translate(${margin.left}, 0)`) 
+   //scales the svg according to the y-scale
    .call(d3.axisLeft(yScale1)) 
    .attr("font-size", '20px'); 
 
-// TODO: What does each line of this code do? 
+//appends a placeholder svg/general svg class
 svg1.append("g")
+    //places the svg on the x-axis
     .attr("transform", `translate(0,${height - margin.bottom})`) 
+    //scales the svg according to the x-scale
     .call(d3.axisBottom(xScale1) 
+            //sets the category names for the bars on the x-axis
             .tickFormat(i => data1[i].name))  
     .attr("font-size", '20px'); 
 
@@ -77,26 +82,30 @@ svg1.append("g")
 
 */
 
-// TODO: What does each line of this code do? 
+// selects the hard-coded bar chart 
 const tooltip1 = d3.select("#hard-coded-bar") 
+                //adds a div to hold the tooltip
                 .append("div") 
+                //gets the id of the tooltip
                 .attr('id', "tooltip1") 
+                //sets the opacity of the tool tip, totally transparent
                 .style("opacity", 0) 
+                //selects all tooltips
                 .attr("class", "tooltip"); 
 
-// TODO: What does each line of this code do?  
+// displays the tooltip w/ 0 transparency + the text when the bar is mousedover
 const mouseover1 = function(event, d) {
   tooltip1.html("Name: " + d.name + "<br> Score: " + d.score + "<br>") 
           .style("opacity", 1);  
 }
 
-// TODO: What does each line of this code do? 
+// displays the tooltip in relation to the mouse's location
 const mousemove1 = function(event, d) {
-  tooltip1.style("left", (event.x)+"px") 
-          .style("top", (event.y + yTooltipOffset) +"px"); 
+  tooltip1.style("left", (event.pageX)+"px") 
+          .style("top", (event.pageY + yTooltipOffset) +"px"); 
 }
 
-// TODO: What does this code do? 
+//hides the tooltip when the mouse doesn't hover
 const mouseleave1 = function(event, d) { 
   tooltip1.style("opacity", 0); 
 }
@@ -107,7 +116,7 @@ const mouseleave1 = function(event, d) {
 
 */
 
-// TODO: What does each line of this code do? 
+// displays all objects with the class bar, adds the bars to the chart
 svg1.selectAll(".bar") 
    .data(data1) 
    .enter()  
@@ -124,7 +133,6 @@ svg1.selectAll(".bar")
 
 //new barchart
 // Plotting 
-d3.csv("data/barchart.csv").then((data) => {
 /*
 
   Axes
@@ -137,75 +145,76 @@ d3.csv("data/barchart.csv").then((data) => {
     .attr("height", height - margin.top - margin.bottom)
     .attr("viewBox", [0, 0, width, height]);
 
+  d3.csv("data/barchart.csv").then((data) => {
 
-  maxY1 = d3.max(data2, function(d) { return d.score; });
+    let maxY2 = d3.max(data, function(d) { return d.score; });
 
-  yScale1 = d3.scaleLinear()
-              //sets the domain of values on the y-axis
-              .domain([0,maxY1])
-              //sets the range of values on the y-axis
-              .range([height-margin.bottom,margin.top]); 
+    let yScale2 = d3.scaleLinear()
+                //sets the domain of values on the y-axis
+                .domain([0,maxY2])
+                //sets the range of values on the y-axis
+                .range([height-margin.bottom,margin.top]); 
 
-  xScale1 = d3.scaleBand()
-              .domain(d3.range(data2.length))
-              .range([margin.left, width - margin.right])
-              //adds padding to the y-axis
-              .padding(0.1); 
+    let xScale2 = d3.scaleBand()
+                .domain(d3.range(data.length))
+                .range([margin.left, width - margin.right])
+                //adds padding to the y-axis
+                .padding(0.1); 
 
-  svg2.append("g")
-    .attr("transform", `translate(${margin.left}, 0)`) 
-    .call(d3.axisLeft(yScale1)) 
-    .attr("font-size", '20px'); 
-
-  svg2.append("g")
-      .attr("transform", `translate(0,${height - margin.bottom})`) 
-      .call(d3.axisBottom(xScale1) 
-              .tickFormat(i => data2[i].name))  
+    svg2.append("g")
+      .attr("transform", `translate(${margin.left}, 0)`) 
+      .call(d3.axisLeft(yScale2)) 
       .attr("font-size", '20px'); 
 
-  /* 
+    svg2.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`) 
+        .call(d3.axisBottom(xScale2) 
+                .tickFormat(i => data[i].name))  
+        .attr("font-size", '20px'); 
 
-    Tooltip Set-up  
+    /* 
 
-  */
+      Tooltip Set-up  
 
-  tooltip1 = d3.select("#csv-bar") 
-                  .append("div") 
-                  .attr('id', "tooltip1") 
-                  .style("opacity", 0) 
-                  .attr("class", "tooltip"); 
+    */
 
-  mouseover1 = function(event, d) {
-    tooltip1.html("Name: " + d.name + "<br> Score: " + d.score + "<br>") 
-            .style("opacity", 1);  
-  }
+    let tooltip2 = d3.select("#csv-bar") 
+                    .append("div") 
+                    .attr('id', "tooltip2") 
+                    .style("opacity", 0) 
+                    .attr("class", "tooltip"); 
 
-  mousemove1 = function(event, d) {
-    tooltip1.style("left", (event.x)+"px") 
-            .style("top", (event.y + yTooltipOffset) +"px"); 
-  }
+    mouseover2 = function(event, d) {
+      tooltip2.html("Name: " + d.name + "<br> Score: " + d.score + "<br>") 
+              .style("opacity", 1);  
+    }
 
-  mouseleave1 = function(event, d) { 
-    tooltip1.style("opacity", 0); 
-  }
+    mousemove2 = function(event, d) {
+      tooltip2.style("left", (event.pageX)+"px") 
+              .style("top", (event.pageY + yTooltipOffset) +"px"); 
+    }
 
-  /* 
+    mouseleave2 = function(event, d) { 
+      tooltip2.style("opacity", 0); 
+    }
 
-    Bars 
+    /* 
 
-  */
+      Bars 
 
-  // TODO: What does each line of this code do? 
-  svg2.selectAll(".bar") 
-    .data(data2) 
-    .enter()  
-    .append("rect") 
-      .attr("class", "bar") 
-      .attr("x", (d,i) => xScale1(i)) 
-      .attr("y", (d) => yScale1(d.score)) 
-      .attr("height", (d) => (height - margin.bottom) - yScale1(d.score)) 
-      .attr("width", xScale1.bandwidth()) 
-      .on("mouseover", mouseover1) 
-      .on("mousemove", mousemove1)
-      .on("mouseleave", mouseleave1);
+    */
+
+    // TODO: What does each line of this code do? 
+    svg2.selectAll(".bar") 
+      .data(data) 
+      .enter()  
+      .append("rect") 
+        .attr("class", "bar") 
+        .attr("x", (d,i) => xScale1(i)) 
+        .attr("y", (d) => yScale1(d.score)) 
+        .attr("height", (d) => (height - margin.bottom) - yScale1(d.score)) 
+        .attr("width", xScale1.bandwidth()) 
+        .on("mouseover", mouseover2) 
+        .on("mousemove", mousemove2)
+        .on("mouseleave", mouseleave2);
 });
