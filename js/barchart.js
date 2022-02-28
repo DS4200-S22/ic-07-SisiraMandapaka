@@ -122,9 +122,90 @@ svg1.selectAll(".bar")
      .on("mouseleave", mouseleave1);
 
 
+//new barchart
+// Plotting 
+d3.csv("data/barchart.csv").then((data) => {
+/*
+
+  Axes
+
+*/ 
+  const svg2 = d3
+    .select("#csv-bar")
+    .append("svg")
+    .attr("width", width-margin.left-margin.right)
+    .attr("height", height - margin.top - margin.bottom)
+    .attr("viewBox", [0, 0, width, height]);
 
 
+  maxY1 = d3.max(data2, function(d) { return d.score; });
 
+  yScale1 = d3.scaleLinear()
+              //sets the domain of values on the y-axis
+              .domain([0,maxY1])
+              //sets the range of values on the y-axis
+              .range([height-margin.bottom,margin.top]); 
 
+  xScale1 = d3.scaleBand()
+              .domain(d3.range(data2.length))
+              .range([margin.left, width - margin.right])
+              //adds padding to the y-axis
+              .padding(0.1); 
 
+  svg2.append("g")
+    .attr("transform", `translate(${margin.left}, 0)`) 
+    .call(d3.axisLeft(yScale1)) 
+    .attr("font-size", '20px'); 
 
+  svg2.append("g")
+      .attr("transform", `translate(0,${height - margin.bottom})`) 
+      .call(d3.axisBottom(xScale1) 
+              .tickFormat(i => data2[i].name))  
+      .attr("font-size", '20px'); 
+
+  /* 
+
+    Tooltip Set-up  
+
+  */
+
+  tooltip1 = d3.select("#csv-bar") 
+                  .append("div") 
+                  .attr('id', "tooltip1") 
+                  .style("opacity", 0) 
+                  .attr("class", "tooltip"); 
+
+  mouseover1 = function(event, d) {
+    tooltip1.html("Name: " + d.name + "<br> Score: " + d.score + "<br>") 
+            .style("opacity", 1);  
+  }
+
+  mousemove1 = function(event, d) {
+    tooltip1.style("left", (event.x)+"px") 
+            .style("top", (event.y + yTooltipOffset) +"px"); 
+  }
+
+  mouseleave1 = function(event, d) { 
+    tooltip1.style("opacity", 0); 
+  }
+
+  /* 
+
+    Bars 
+
+  */
+
+  // TODO: What does each line of this code do? 
+  svg2.selectAll(".bar") 
+    .data(data2) 
+    .enter()  
+    .append("rect") 
+      .attr("class", "bar") 
+      .attr("x", (d,i) => xScale1(i)) 
+      .attr("y", (d) => yScale1(d.score)) 
+      .attr("height", (d) => (height - margin.bottom) - yScale1(d.score)) 
+      .attr("width", xScale1.bandwidth()) 
+      .on("mouseover", mouseover1) 
+      .on("mousemove", mousemove1)
+      .on("mouseleave", mouseleave1);
+});
